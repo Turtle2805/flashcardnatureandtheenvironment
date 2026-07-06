@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flashcard & Trắc Nghiệm Từ Vựng Environment HSA - Ms Lê Hằng English</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght=500;700;900&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes floatPattern {
+            0% { background-position: 0 0, 0 0; }
+            100% { background-position: 100px 100px, 50px 50px; }
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #FF7675, #FDCB6E, #FF8E53, #FF6B81);
+            background-size: 400% 400%;
+            animation: gradientBG 12s ease infinite;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 15px;
+        }
+
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0;
+            opacity: 0.15;
+            pointer-events: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cpath d='M9 26c1.2 0 2.1-.4 2.8-1.2.8-.7 1.2-1.7 1.2-2.8 0-1.2-.4-2.1-1.2-2.8C11.1 18.4 10.2 18 9 18c-1.2 0-2.1.4-2.8 1.2-.8.7-1.2 1.7-1.2 2.8 0 1.2.4 2.1 1.2 2.8C6.9 25.6 7.8 26 9 26zm30 0c1.2 0 2.1-.4 2.8-1.2.8-.7 1.2-1.7 1.2-2.8 0-1.2-.4-2.1-1.2-2.8-.7-.8-1.7-1.2-2.8-1.2-1.2 0-2.1.4-2.8 1.2-.8.7-1.2 1.7-1.2 2.8 0 1.2.4 2.1 1.2 2.8.7.8 1.7 1.2 2.8 1.2zM24 48c1.2 0 2.1-.4 2.8-1.2.8-.7 1.2-1.7 1.2-2.8 0-1.2-.4-2.1-1.2-2.8-.7-.8-1.7-1.2-2.8-1.2-1.2 0-2.1.4-2.8 1.2-.8.7-1.2 1.7-1.2 2.8 0 1.2.4 2.1 1.2 2.8.7.8 1.7 1.2 2.8 1.2z' fill='%23ffffff' fill-opacity='0.8' fill-rule='evenodd'/%3E%3C/svg%3E"), 
+                            url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='%23ffffff' fill-opacity='0.6'%3E%3Cpath d='M10 15h4v4h-4zm20 30h4v4h-4zm40-20h4v4h-4zM20 70h4v4h-4z'/%3E%3Cpath d='M9.5 10.5l3 3m-3 0l3-3m57.5 17.5l3 3m-3 0l3-3M26.5 42.5l3 3m-3 0l3-3' stroke='%23fff' stroke-width='2'/%3E%3C/g%3E%3C/svg%3E");
+            animation: floatPattern 25s linear infinite;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            z-index: 1;
+        }
+
+        .header-panel {
+            text-align: center;
+            background: #FFFFFF;
+            padding: 16px;
+            border-radius: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
+            border: 3px solid #6C5CE7;
+        }
+
+        .header-panel h1 {
+            font-size: 15pt;
+            color: #6C5CE7;
+            margin: 0;
+            font-weight: 900;
+        }
+
+        .tab-container {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+
+        .tab-btn {
+            background: #FFFFFF;
+            border: none;
+            padding: 12px 25px;
+            font-size: 10.5pt;
+            font-weight: 900;
+            border-radius: 14px;
+            cursor: pointer;
+            color: #4A5568;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: all 0.2s ease;
+        }
+
+        .tab-btn.active {
+            background: #00CEC9;
+            color: white;
+            box-shadow: 0 4px 10px rgba(0, 206, 201, 0.3);
+        }
+
+        .flashcard-wrapper {
+            perspective: 1000px;
+            width: 100%;
+            height: 300px;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .flashcard {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            border-radius: 28px;
+        }
+
+        .flashcard.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            text-align: center;
+            background: #FFFFFF;
+        }
+
+        .card-front {
+            color: #2C3E50;
+        }
+
+        .card-back {
+            background: #6C5CE7;
+            color: #FFFFFF;
+            transform: rotateY(180deg);
+        }
+
+        .word-title {
+            font-size: 26pt;
+            font-weight: 900;
+            margin-bottom: 12px;
+            color: #6C5CE7;
+            letter-spacing: -0.5px;
+        }
+
+        .card-back .word-title {
+            color: #FFFFFF;
+        }
+
+        .word-meta {
+            font-size: 11.5pt;
+            color: #718096;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .word-meaning {
+            font-size: 18pt;
+            font-weight: 900;
+            line-height: 1.5;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: white;
+            padding: 10px 15px;
+            border-radius: 16px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .nav-btn {
+            background: #FDCB6E;
+            border: 2px solid #E6A115;
+            color: #2C3E50;
+            padding: 10px 24px;
+            font-size: 10.5pt;
+            font-weight: 900;
+            border-radius: 12px;
+            cursor: pointer;
+            box-shadow: 0 3px 0 #E6A115;
+            transition: all 0.1s;
+        }
+
+        .nav-btn:active {
+            transform: translateY(3px);
+            box-shadow: none;
+        }
+
+        .progress-text {
+            font-weight: 900;
+            color: #4A5568;
+            font-size: 12pt;
+        }
+
+        .quiz-panel {
+            background: white;
+            border-radius: 28px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+            display: none;
+        }
+
+        .quiz-question {
+            font-size: 14pt;
+            font-weight: 900;
+            color: #2C3E50;
+            margin-bottom: 25px;
+            text-align: center;
+            line-height: 1.6;
+        }
+
+        .quiz-options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+
+        .quiz-opt-btn {
+            background: #FFFFFF;
+            border: 2px solid #E2E8F0;
+            padding: 15px 20px;
+            text-align: left;
+            font-size: 11pt;
+            font-weight: 700;
+            color: #4A5568;
+            border-radius: 16px;
+            cursor: pointer;
+            box-shadow: 0 3px 0 #E2E8F0;
+            transition: all 0.1s;
+        }
+
+        .quiz-opt-btn:hover {
+            background: #F8FAFC;
+            border-color: #CBD5E1;
+        }
+
+        .quiz-opt-btn.correct {
+            background: #00D26A !important;
+            color: white !important;
+            border-color: #00A855 !important;
+            box-shadow: 0 3px 0 #00A855 !important;
+        }
+
+        .quiz-opt-btn.wrong {
+            background: #FF4757 !important;
+            color: white !important;
+            border-color: #D63031 !important;
+            box-shadow: 0 3px 0 #D63031 !important;
+        }
+
+        .hint-text {
+            text-align: center;
+            color: #FFFFFF;
+            font-weight: 700;
+            font-size: 10.5pt;
+            margin: 12px 0;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+        }
+
+        #confetti-canvas {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="confetti-canvas"></canvas>
+
+    <div class="container">
+        <div class="header-panel">
+            <h1>Chuyên Đề Từ Vựng HSA - Ms Lê Hằng English</h1>
+        </div>
+
+        <div class="tab-container">
+            <button class="tab-btn active" id="tab-flash" onclick="switchMode('flash')">THỂ GHI NHỚ (FLASHCARD)</button>
+            <button class="tab-btn" id="tab-quiz" onclick="switchMode('quiz')">TRẮC NGHIỆM PHẢN XẠ</button>
+        </div>
+
+        <!-- Khung chế độ Thẻ ghi nhớ Flashcard -->
+        <div id="flash-section">
+            <div class="flashcard-wrapper" onclick="toggleFlip()">
+                <div class="flashcard" id="fcard">
+                    <div class="card-face card-front">
+                        <div class="word-title" id="front-word">Acid rain</div>
+                        <div class="word-meta" id="front-type">Từ loại: np</div>
+                        <div class="word-meta" id="front-ipa">/ˌæs.ɪd ˈreɪn/</div>
+                    </div>
+                    <div class="card-face card-back">
+                        <div class="word-meta" style="color: #E2E8F0; font-weight:900;">Ý NGHĨA TIẾNG VIỆT</div>
+                        <div class="word-meaning" id="back-meaning">Mưa axit</div>
+                    </div>
+                </div>
+            </div>
+            
+            <p class="hint-text">💡 Bấm vào thẻ để lật xem ý nghĩa và phát âm con nhé!</p>
+
+            <div class="controls">
+                <button class="nav-btn" onclick="prevCard()">TRƯỚC</button>
+                <div class="progress-text" id="card-progress">1 / 50</div>
+                <button class="nav-btn" onclick="nextCard()">SAU</button>
+            </div>
+        </div>
+
+        <!-- Khung chế độ Trắc nghiệm phản xạ -->
+        <div id="quiz-section" class="quiz-panel">
+            <div class="quiz-question" id="q-text">Đang tải câu hỏi...</div>
+            <div class="quiz-options" id="q-options"></div>
+            <div class="controls" style="margin-top: 25px; box-shadow: none; padding: 10px 0 0 0;">
+                <div class="progress-text" id="quiz-progress">Câu hỏi: 1 / 50</div>
+                <button class="nav-btn" onclick="nextQuizQuestion()">CÂU TIẾP THEO</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const wordList = [
+            {eng:"Acid rain", ipa:"/ˌæs.ɪd ˈreɪn/", type:"np", vi:"Mưa axit"},
+            {eng:"Alternative", ipa:"/ɒlˈtɜː.nə.tɪv/", type:"adj/n", vi:"Thay thế / Giải pháp thay thế"},
+            {eng:"Atmosphere", ipa:"/ˈæt.mə.sfɪər/", type:"n", vi:"Khí quyển, bầu không khí"},
+            {eng:"Barren", ipa:"/ˈbær.ən/", type:"adj", vi:"Cằn cỗi, xơ xác (đất đai)"},
+            {eng:"Biodegradable", ipa:"/ˌbaɪ.əʊ.dɪˈɡreɪ.də.bəl/", type:"adj", vi:"Có thể phân hủy sinh học"},
+            {eng:"Biodiversity", ipa:"/ˌbaɪ.əʊ.daɪˈvɜː.sə.ti/", type:"n", vi:"Đa dạng sinh học"},
+            {eng:"Carbon footprint", ipa:"/ˌkɑː.bən ˈfʊt.prɪnt/", type:"np", vi:"Dấu chân carbon"},
+            {eng:"Climate change", ipa:"/ˈklaɪ.mət tʃeɪndʒ/", type:"np", vi:"Biến đổi khí hậu"},
+            {eng:"Conservation", ipa:"/ˌkɒn.səˈveɪ.ʃən/", type:"n", vi:"Sự bảo tồn thiên nhiên"},
+            {eng:"Contaminate", ipa:"/kənˈtæm.ɪ.neɪt/", type:"v", vi:"Làm ô nhiễm, làm bẩn"},
+            {eng:"Contamination", ipa:"/kənˌtæm.ɪˈneɪ.ʃən/", type:"n", vi:"Sự làm nhiễm độc, sự ô nhiễm"},
+            {eng:"Deforestation", ipa:"/diːˌfɒr.ɪˈsteɪ.ʃən/", type:"n", vi:"Nạn phá rừng"},
+            {eng:"Depletion", ipa:"/dɪˈpliː.ʃən/", type:"n", vi:"Sự suy giảm, cạn kiệt tài nguyên"},
+            {eng:"Disposal", ipa:"/dɪˈspəʊ.zəl/", type:"n", vi:"Sự vứt bỏ, xử lý rác thải"},
+            {eng:"Drought", ipa:"/draʊt/", type:"n", vi:"Hạn hán"},
+            {eng:"Earthquake", ipa:"/ˈɜːθ.kweɪk/", type:"n", vi:"Động đất"},
+            {eng:"Eco-friendly", ipa:"/ˌiː.kəʊˈfrend.li/", type:"adj", vi:"Thân thiện với môi trường"},
+            {eng:"Ecological", ipa:"/ˌiː.kəˈlɒdʒ.ɪ.kəl/", type:"adj", vi:"Thuộc về sinh thái"},
+            {eng:"Ecosystem", ipa:"/ˈiː.kəʊˌsɪs.təm/", type:"n", vi:"Hệ sinh thái"},
+            {eng:"Emission", ipa:"/iˈmɪʃ.ən/", type:"n", vi:"Khí thải xả ra môi trường"},
+            {eng:"Endangered", ipa:"/ɪnˈdeɪn.dʒəd/", type:"adj", vi:"Có nguy cơ tuyệt chủng, nguy cấp"},
+            {eng:"Erode", ipa:"/ɪˈrəʊd/", type:"v", vi:"Xói mòn, ăn mòn"},
+            {eng:"Exploit", ipa:"/ɪkˈsplɔɪt/", type:"v", vi:"Khai thác tài nguyên"},
+            {eng:"Extinct", ipa:"/ɪkˈstɪŋkt/", type:"adj", vi:"Tuyệt chủng"},
+            {eng:"Fertizer", ipa:"/ˈfɜː.tɪ.laɪ.zər/", type:"n", vi:"Phân bón"},
+            {eng:"Flood", ipa:"/flʌd/", type:"n", vi:"Lũ lụt"},
+            {eng:"Fossil fuels", ipa:"/ˈfɒs.əl ˌfjʊəlz/", type:"np", vi:"Nhiên liệu hóa thạch"},
+            {eng:"Global warming", ipa:"/ˌdʒləʊ.bəl ˈwɔː.mɪŋ/", type:"np", vi:"Hiện tượng nóng lên toàn cầu"},
+            {eng:"Greenhouse effect", ipa:"/ˈdriːn.haʊs ɪˌfekt/", type:"np", vi:"Hiệu ứng nhà kính"},
+            {eng:"Habitat", ipa:"/ˈhæb.ɪ.tæt/", type:"n", vi:"Môi trường sống của sinh vật"},
+            {eng:"Lush", ipa:"/lʌʃ/", type:"adj", vi:"Tươi tốt, xum xuê (cây cối)"},
+            {eng:"Marine", ipa:"/məˈriːn/", type:"adj", vi:"Thuộc về biển, đại dương"},
+            {eng:"Natural disaster", ipa:"/ˌnætʃ.ər.əl dɪˈzɑː.stər/", type:"np", vi:"Thảm họa thiên nhiên"},
+            {eng:"Ozone layer", ipa:"/ˈəʊ.zəʊn ˌleɪ.ər/", type:"np", vi:"Tầng ô-zôn bảo vệ Trái Đất"},
+            {eng:"Pesticide", ipa:"/ˈpes.tɪ.saɪd/", type:"n", vi:"Thuốc trừ sâu hóa học"},
+            {eng:"Poaching", ipa:"/ˈpəʊ.tʃɪŋ/", type:"n", vi:"Việc săn bắn động vật trộm"},
+            {eng:"Pollution", ipa:"/pəˈluː.ʃən/", type:"n", vi:"Sự ô nhiễm môi trường"},
+            {eng:"Preserve", ipa:"/prɪˈzɜːv/", type:"v", vi:"Gìn giữ, bảo tồn nguyên vẹn"},
+            {eng:"Purify", ipa:"/ˈpjʊə.rɪ.faɪ/", type:"v", vi:"Thanh lọc, làm sạch trong"},
+            {eng:"Recycle", ipa:"/ˌriːˈsaɪ.kəl/", type:"v", vi:"Tái chế rác thải"},
+            {eng:"Renewable", ipa:"/rɪˈnjuː.ə.bəl/", type:"adj", vi:"Có thể tái tạo, tự làm đầy lại"},
+            {eng:"Resource", ipa:"/rɪˈzɔːs/", type:"n", vi:"Tài nguyên thiên nhiên"},
+            {eng:"Sanctuary", ipa:"/ˈsæŋk.tʃu.ə.ri/", type:"n", vi:"Khu bảo tồn, nơi trú ẩn an toàn"},
+            {eng:"Solar panel", ipa:"/ˌsəʊ.lə ˈpæn.əl/", type:"np", vi:"Tấm pin năng lượng mặt trời"},
+            {eng:"Species", ipa:"/ˈspiː.ʃiːz/", type:"n", vi:"Loài, các chủng loại sinh vật"},
+            {eng:"Sustainability", ipa:"/səˌsteɪ.nəˈbɪl.ə.ti/", type:"n", vi:"Sự phát triển bền vững"},
+            {eng:"Terrestrial", ipa:"/təˈres.tri.əl/", type:"adj", vi:"Sống trên cạn, thuộc đất liền"},
+            {eng:"Toxic", ipa:"/ˈtɒk.sɪk/", type:"adj", vi:"Độc hại, có chất độc"},
+            {eng:"Tsunami", ipa:"/tsuːˈnɑː.mi/", type:"n", vi:"Sóng thần"},
+            {eng:"Wildfire", ipa:"/ˈwaɪld.faɪər/", type:"n", vi:"Cháy rừng diện rộng"}
+        ];
+
+        let currentCardIndex = 0;
+        let currentQuizIndex = 0;
+        let quizAnswered = false;
+
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        let audioCtx = null;
+        function playSound(type) {
+            try {
+                if(!audioCtx) audioCtx = new AudioCtx();
+                const now = audioCtx.currentTime;
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                if(type === 'correct') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(523.25, now);
+                    osc.frequency.setValueAtTime(659.25, now + 0.1);
+                    gain.gain.setValueAtTime(0.12, now);
+                } else {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(160, now);
+                    osc.frequency.linearRampToValueAtTime(110, now + 0.25);
+                    gain.gain.setValueAtTime(0.12, now);
+                }
+                osc.connect(gain); gain.connect(audioCtx.destination);
+                osc.start(now); osc.stop(now + 0.3);
+            } catch(e){}
+        }
+
+        const canvas = document.getElementById('confetti-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeCanvas); resizeCanvas();
+
+        function triggerEffects() {
+            particles = [];
+            for(let i=0; i<35; i++) {
+                particles.push({
+                    x: canvas.width/2 + (Math.random()*160 - 80),
+                    y: canvas.height/2 + (Math.random()*160 - 80),
+                    size: Math.random()*5 + 3,
+                    color: ['#00CEC9','#6C5CE7','#FF7675','#FDCB6E'][Math.floor(Math.random()*4)],
+                    vX: Math.random()*6 - 3, vY: Math.random()*6 - 3
+                });
+            }
+            animate();
+        }
+        function animate() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            let alive = false;
+            particles.forEach(p => {
+                p.x += p.vX; p.y += p.vY; p.vY += 0.12;
+                if(p.y < canvas.height) alive = true;
+                ctx.fillStyle = p.color;
+                ctx.fillRect(p.x, p.y, p.size, p.size);
+            });
+            if(alive) requestAnimationFrame(animate);
+        }
+
+        function switchMode(mode) {
+            document.getElementById('tab-flash').classList.remove('active');
+            document.getElementById('tab-quiz').classList.remove('active');
+            document.getElementById('flash-section').style.display = 'none';
+            document.getElementById('quiz-section').style.display = 'none';
+
+            if(mode === 'flash') {
+                document.getElementById('tab-flash').classList.add('active');
+                document.getElementById('flash-section').style.display = 'block';
+            } else {
+                document.getElementById('tab-quiz').classList.add('active');
+                document.getElementById('quiz-section').style.display = 'block';
+                loadQuizQuestion();
+            }
+        }
+
+        function updateCard() {
+            const item = wordList[currentCardIndex];
+            document.getElementById('fcard').classList.remove('flipped');
+            setTimeout(() => {
+                document.getElementById('front-word').innerText = item.eng;
+                document.getElementById('front-type').innerText = `Từ loại: ${item.type}`;
+                document.getElementById('front-ipa').innerText = item.ipa;
+                document.getElementById('back-meaning').innerText = item.vi;
+                document.getElementById('card-progress').innerText = `${currentCardIndex + 1} / ${wordList.length}`;
+            }, 120);
+        }
+        function toggleFlip() { document.getElementById('fcard').classList.toggle('flipped'); }
+        function nextCard() { if(currentCardIndex < wordList.length - 1) { currentCardIndex++; updateCard(); } }
+        function prevCard() { if(currentCardIndex > 0) { currentCardIndex--; updateCard(); } }
+
+        function loadQuizQuestion() {
+            quizAnswered = false;
+            const currentWord = wordList[currentQuizIndex];
+            document.getElementById('quiz-progress').innerText = `Câu hỏi: ${currentQuizIndex + 1} / ${wordList.length}`;
+            document.getElementById('q-text').innerText = `Từ tiếng Anh nào dưới đây mang nghĩa: "${currentWord.vi}"?`;
+
+            let options = [currentWord.eng];
+            while(options.length < 4) {
+                let randomWord = wordList[Math.floor(Math.random() * wordList.length)].eng;
+                if(!options.includes(randomWord)) options.push(randomWord);
+            }
+            options.sort(() => Math.random() - 0.5);
+
+            const optContainer = document.getElementById('q-options');
+            optContainer.innerHTML = '';
+            options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'quiz-opt-btn';
+                btn.innerText = `${String.fromCharCode(65 + idx)}. ${opt}`;
+                btn.onclick = () => selectOption(btn, opt, currentWord.eng);
+                optContainer.appendChild(btn);
+            });
+        }
+
+        function selectOption(btn, chosen, correct) {
+            if(quizAnswered) return;
+            quizAnswered = true;
+
+            if(chosen === correct) {
+                btn.classList.add('correct');
+                playSound('correct');
+                triggerEffects();
+            } else {
+                btn.classList.add('wrong');
+                playSound('wrong');
+                const btns = document.getElementsByClassName('quiz-opt-btn');
+                for(let b of btns) {
+                    if(b.innerText.includes(correct)) b.classList.add('correct');
+                }
+            }
+        }
+
+        function nextQuizQuestion() {
+            if(currentQuizIndex < wordList.length - 1) {
+                currentQuizIndex++;
+                loadQuizQuestion();
+            } else {
+                alert("🎉 Chúc mừng con đã hoàn thành xuất sắc chuỗi trắc nghiệm phản xạ 50 từ vựng chủ đề Môi trường!");
+                currentQuizIndex = 0;
+                loadQuizQuestion();
+            }
+        }
+
+        window.onload = () => { updateCard(); };
+    </script>
+</body>
+</html>
